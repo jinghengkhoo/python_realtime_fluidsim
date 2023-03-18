@@ -5,12 +5,11 @@ and the mike ash vulgarization https://mikeash.com/pyblog/fluid-simulation-for-d
 import numpy as np
 import math
 
-
 class Fluid:
 
     def __init__(self):
-        self.size = 40  # map size
-        self.dt = 0.2  # time interval
+        self.size = 50  # map size
+        self.dt = 0.5  # time interval
         self.iter = 8  # linear equation solving iteration number
 
         self.diff = 0.0000  # Diffusion
@@ -189,9 +188,15 @@ if __name__ == "__main__":
     inst = Fluid()
 
 
+
+    def on_move(event):
+        if event.inaxes:
+            # print(f'data coords {event.xdata} {event.ydata},',
+            #     f'pixel coords {event.x} {event.y}')
+            inst.density[int(event.ydata)-2:int(event.ydata)+2, int(event.xdata)-2:int(event.xdata)+2] += 100
+
     def update_im(i):
-        inst.density[4:7, 4:7] += 100  # add density into a 3*3 square
-        inst.velo[5, 5] += [1, 2]
+        inst.velo[5, 5] += [2, 2]
         inst.step()
         im.set_array(inst.density)
         # update vector field data
@@ -201,7 +206,7 @@ if __name__ == "__main__":
         # print(f"Density sum: {inst.total_density:.2f}, Total divergence: {inst.total_divergence:.2f}")
 
         # auto adjust heatmap "brightness"
-        # im.autoscale()
+        im.autoscale()
 
     fig = plt.figure()
 
@@ -210,5 +215,7 @@ if __name__ == "__main__":
 
     # plot vector field
     q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color='w')
+    binding_id = plt.connect('motion_notify_event', on_move)
+
     anim = animation.FuncAnimation(fig, update_im, interval=0)
     plt.show()
