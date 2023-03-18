@@ -214,7 +214,7 @@ if __name__ == "__main__":
     im = plt.imshow(inst.density, cmap='hot', vmax=100, interpolation='bilinear')
 
     # plot vector field
-    q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color='w')
+    q = plt.quiver(inst.velo[:, :, 1], inst.velo[:, :, 0], scale=10, angles='xy', color='black')
     binding_id = plt.connect('motion_notify_event', on_move)
 
     anim = animation.FuncAnimation(fig, update_im, interval=0)
